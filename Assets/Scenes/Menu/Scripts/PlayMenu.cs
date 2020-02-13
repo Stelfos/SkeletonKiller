@@ -22,25 +22,22 @@ public class PlayMenu : MonoBehaviour
         {
             yield return null;
         }
-        Debug.Log(SceneManager.GetActiveScene().buildIndex);
         Scene sceneToLoad = SceneManager.GetSceneByBuildIndex(SceneManager.GetActiveScene().buildIndex + 1);
         parent1.transform.parent = null;
         DontDestroyOnLoad(parent1);
-        SceneManager.MoveGameObjectToScene(parent1, sceneToLoad);
         parent2.transform.parent = null;
         DontDestroyOnLoad(parent2);
-        SceneManager.MoveGameObjectToScene(parent2, sceneToLoad);
+
+        newPlayer();
         // Unload the previous Scene
         SceneManager.UnloadSceneAsync(currentScene);
-        Debug.Log("New scene loaded");
-        Debug.Log("Creating new player");
-        newPlayer();
+
+
     }
     void newPlayer()
     {
         GameObject player = GameObject.Find("Player");
         player.GetComponentInChildren<PlayerStats>()
             .GenerateChild(GameObject.Find("ParentStats1").GetComponent<PlayerStats>(), GameObject.Find("ParentStats2").GetComponent<PlayerStats>());
-        Debug.Log("succes");
     }
 }

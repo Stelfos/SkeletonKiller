@@ -58,7 +58,7 @@ public abstract class PlayerController :MonoBehaviour
     }
 
 
-    protected void prefromJump()
+    protected void PrefromJump()
     {
         m_Anim.Play("Jump");
 

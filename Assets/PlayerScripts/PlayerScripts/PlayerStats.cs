@@ -42,6 +42,8 @@ public class PlayerStats : MonoBehaviour
         size.y = UnityEngine.Random.Range(0.9f, 1.1f);
         sizeDNA = RandomSizeDNA();
         currentHealth = vitality;
+        exp = 0;
+        maxExp = 100;
     }
 
     private char[] RandomDNA()
@@ -68,26 +70,39 @@ public class PlayerStats : MonoBehaviour
     private char[] RandomSizeDNA()
     {
         char[] DNA;
-        switch (UnityEngine.Random.Range(0, 4))
+        switch (UnityEngine.Random.Range(0, 8))
         {
             case 0:
                 DNA = new char[4] { 'a', 'a', 'a', 'a' };
                 break;
             case 1:
-                DNA = new char[4] { 'A', 'a', 'a', 'a' };
+                DNA = new char[4] { 'a', 'a', 'A', 'a' };
                 break;
 
             case 2:
-                DNA = new char[4] { 'A', 'A', 'a', 'a' };
+                DNA = new char[4] { 'a', 'a', 'A', 'A' };
                 break;
             case 3:
-                DNA = new char[4] { 'A', 'A', 'A', 'a' };
+                DNA = new char[4] { 'A', 'a', 'a', 'a' };
                 break;
             case 4:
+                DNA = new char[4] { 'A', 'a', 'A', 'a' };
+                break;
+            case 5:
+                DNA = new char[4] { 'A', 'a', 'A', 'A' };
+                break;
+            case 6:
+                DNA = new char[4] { 'A', 'A', 'a', 'a' };
+                break;
+
+            case 7:
+                DNA = new char[4] { 'A', 'A', 'A', 'a' };
+                break;
+            case 8:
                 DNA = new char[4] { 'A', 'A', 'A', 'A' };
                 break;
             default:
-                DNA = new char[4] { 'A', 'A', 'a', 'a' };
+                DNA = new char[4] { 'A', 'a', 'A', 'a' };
                 break;
 
         }
@@ -100,26 +115,26 @@ public class PlayerStats : MonoBehaviour
 
         vitalityDNA = GenerateDNA(GenerateDNAList("vitality", parents));
         Array.Sort(vitalityDNA);
-        vitality = setPlayerAttribute(vitalityDNA, GenrateAttibuteList("vitality", parents), 200, 70);
+        vitality = SetPlayerAttribute(vitalityDNA, GenrateAttibuteList("vitality", parents), 200, 70);
 
         streanthDNA = GenerateDNA(GenerateDNAList("streanth", parents));
         Array.Sort(streanthDNA);
-        streanth = setPlayerAttribute(streanthDNA, GenrateAttibuteList("streanth", parents), 10, 1);
+        streanth = SetPlayerAttribute(streanthDNA, GenrateAttibuteList("streanth", parents), 10, 1);
 
         agilityDNA = GenerateDNA(GenerateDNAList("agility", parents));
         Array.Sort(agilityDNA);
-        agility = setPlayerAttribute(agilityDNA, GenrateAttibuteList("agility", parents), 10, 1);
+        agility = SetPlayerAttribute(agilityDNA, GenrateAttibuteList("agility", parents), 10, 1);
 
         sizeDNA = GenerateDNA(GenerateDNAList("size", parents));
         Array.Sort(sizeDNA);
-        size = setPlayerSize(sizeDNA, GenrateSizeList(parents));
+        size = SetPlayerSize(sizeDNA, GenrateSizeList(parents));
 
 
         currentHealth = vitality;
         this.GetComponentInParent<Transform>().transform.localScale = size;
     }
 
-    private List<Vector2> GenrateSizeList(PlayerStats[] parents)
+    private List<Vector2> GenrateSizeList(params PlayerStats[] parents)
     {
         List<Vector2> sizeList = new List<Vector2>();
         foreach (PlayerStats parent in parents)
@@ -129,7 +144,7 @@ public class PlayerStats : MonoBehaviour
         return sizeList;
     }
 
-    private Vector3 setPlayerSize(char[] sizeDNA, List<Vector2> list)
+    private Vector3 SetPlayerSize(char[] sizeDNA, List<Vector2> list)
     {
         Vector3 size;
         string sDNA = new string(sizeDNA, 0, 2);
@@ -140,7 +155,7 @@ public class PlayerStats : MonoBehaviour
                 break;
 
             case "Aa":
-                size.x = Math.Min((list.Min(v => v.x) + list.Max(v => v.x)) / 2 + UnityEngine.Random.Range(-0.05f, 0.1f), 2);
+                size.x = Math.Min(list.Max(v => v.x) + UnityEngine.Random.Range(-0.1f, 0.05f), 2);
                 break;
 
             case "AA":
@@ -161,7 +176,7 @@ public class PlayerStats : MonoBehaviour
                 break;
 
             case "Aa":
-                size.y = Math.Min((list.Min(v => v.y) + list.Max(v => v.y)) / 2 + UnityEngine.Random.Range(-0.05f, 0.1f), 2);
+                size.y = Math.Max(list.Min(v => v.y)+ UnityEngine.Random.Range(-0.1f, 0.05f), 2);
                 break;
 
             case "AA":
@@ -178,7 +193,7 @@ public class PlayerStats : MonoBehaviour
     }
 
     //Generates List of floats including every parent for chosen attribute 
-    private List<float> GenrateAttibuteList(string attribute, PlayerStats[] parents)
+    private List<float> GenrateAttibuteList(string attribute, params PlayerStats[] parents)
     {
         List<float> attributeList = new List<float>();
         switch (attribute)
@@ -209,7 +224,7 @@ public class PlayerStats : MonoBehaviour
         return attributeList;
     }
 
-    private int setPlayerAttribute(char[] DNA, List<float> parentsAttribute, float max, float min)
+    private int SetPlayerAttribute(char[] DNA, List<float> parentsAttribute, float max, float min)
     {
         float deviation = max * 0.1f;
         float attributeValue;
@@ -217,15 +232,15 @@ public class PlayerStats : MonoBehaviour
         switch (sDNA)
         {
             case "aa":
-                attributeValue = Math.Max(parentsAttribute.Min() + UnityEngine.Random.Range(deviation * -1, deviation) , min);
+                attributeValue = Math.Min(Math.Max(parentsAttribute.Min() + UnityEngine.Random.Range(deviation * -1, deviation) , min), max);
                 break;
 
             case "Aa":
-                attributeValue = Math.Min((parentsAttribute.Min() + parentsAttribute.Max()) / 2 + UnityEngine.Random.Range(deviation * -1, deviation * 2), max);
+                attributeValue = Math.Max(Math.Min(parentsAttribute.Max() + UnityEngine.Random.Range(deviation * -2, deviation * 1), max), min);
                 break;
 
             case "AA":
-                attributeValue = Math.Min(parentsAttribute.Max() + UnityEngine.Random.Range(deviation * -1, deviation * 2), max);
+                attributeValue = Math.Max(Math.Min(parentsAttribute.Max() + UnityEngine.Random.Range(deviation * -1, deviation * 2), max), min);
                 break;
             default:
                 attributeValue = UnityEngine.Random.Range(min, max);
@@ -243,10 +258,10 @@ public class PlayerStats : MonoBehaviour
         int numberOfGens = DNA[0].Length;
         char[] newDNA = new char[numberOfGens];
         int randomGen;
-        for(int i = 0; i < numberOfParents; i++)
+        for(int i = 0; i < numberOfGens; i++)
         {
-            randomGen = UnityEngine.Random.Range(0, numberOfGens);
-            newDNA[i] = DNA[i][randomGen];
+            randomGen = UnityEngine.Random.Range(0, numberOfParents);
+            newDNA[i] = DNA[randomGen][i];
         }
         return newDNA;
     }
@@ -289,7 +304,7 @@ public class PlayerStats : MonoBehaviour
 
     public void LevelUp()
     {
-        switch (UnityEngine.Random.Range(0, 1))
+        switch (UnityEngine.Random.Range(0, 2))
         {
             case 0:
                 if (streanth < 10)
@@ -315,6 +330,7 @@ public class PlayerStats : MonoBehaviour
                     break;
                 }
                 else goto case default;
+            case 2:
             default:
                 if (vitality < 200)
                 {

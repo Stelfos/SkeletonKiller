@@ -22,7 +22,7 @@ public class Swordman : PlayerController
     private void Update()
     {
         if (!isDead)
-            checkInput();
+            CheckInput();
 
         if (m_rigidbody.velocity.magnitude > 30)
         {
@@ -31,7 +31,7 @@ public class Swordman : PlayerController
         }
     }
 
-    public void checkInput()
+    public void CheckInput()
     {
         if (Input.GetKeyDown(KeyCode.P) && !isInMenu)
         {
@@ -120,7 +120,7 @@ public class Swordman : PlayerController
 
                 if (currentJumpCount < JumpCount)  // 0 , 1
                 {
-                    prefromJump();
+                    PrefromJump();
                 }
             }
         }
@@ -146,7 +146,7 @@ public class Swordman : PlayerController
         }
     }
 
-    public void grantExp(float exp)
+    public void GrantExp(float exp)
     {
         playerStats.exp += exp;
         if (playerStats.exp >= playerStats.maxExp)

@@ -98,7 +98,7 @@ public class EnemyController : Enemy
 
     public override void Die()
     {
-        GameObject.Find("Player").GetComponent<Swordman>().grantExp(exp);
+        GameObject.Find("Player").GetComponent<Swordman>().GrantExp(exp);
         Destroy(gameObject, 0.7f);
         animator.SetBool("isDead", true);
         animator.Play("Enemy1Die");

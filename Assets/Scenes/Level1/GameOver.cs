@@ -26,7 +26,6 @@ public class GameOver : MonoBehaviour
         {
             yield return null;
         }
-        Debug.Log(SceneManager.GetActiveScene().buildIndex);
         Scene sceneToLoad = SceneManager.GetSceneByName(SceneManager.GetActiveScene().name);
 
         parent1.transform.parent = null;
